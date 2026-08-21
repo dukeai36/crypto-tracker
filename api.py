@@ -20,8 +20,6 @@ TIMEOUT = 10
 
 # Optional CoinGecko demo key. The endpoints used here work without one, so
 # this is read from the environment and simply omitted when it is not set.
-# Never hard-code the key: set COINGECKO_API_KEY locally (.env or shell) and
-# as a Hugging Face Space secret.
 API_KEY_ENV = "COINGECKO_API_KEY"
 
 
