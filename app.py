@@ -32,22 +32,38 @@ advanced_mode = st.sidebar.toggle(
 )
 
 # 1. Coin Type Input (Dynamic based on toggle)
-coin_options = [
-    "bitcoin", 
-    "ethereum", 
-    "solana", 
-    "cardano", 
-    "ripple", 
-    "dogecoin", 
-    "polkadot"
-]
+coin_options = {
+    "Bitcoin (BTC)": "bitcoin",
+    "Ethereum (ETH)": "ethereum",
+    "Tether (USDT)": "tether",
+    "BNB (BNB)": "binancecoin",
+    "Solana (SOL)": "solana",
+    "USDC (USDC)": "usd-coin",
+    "XRP (XRP)": "ripple",
+    "Dogecoin (DOGE)": "dogecoin",
+    "Cardano (ADA)": "cardano",
+    "TRON (TRX)": "tron",
+    "Avalanche (AVAX)": "avalanche-2",
+    "Chainlink (LINK)": "chainlink",
+    "Polkadot (DOT)": "polkadot",
+    "Polygon (POL)": "polygon",
+    "Litecoin (LTC)": "litecoin",
+    "Bitcoin Cash (BCH)": "bitcoin-cash",
+    "Stellar (XLM)": "stellar",
+    "Uniswap (UNI)": "uniswap",
+    "Cosmos (ATOM)": "cosmos",
+    "Shiba Inu (SHIB)": "shiba-inu"
+}
 
 if not advanced_mode:
-    coin = st.sidebar.selectbox(
-        label="Choose coin type", 
-        options=coin_options,
-        help="Select the CoinGecko coin ID for tracking."
+    selected_coin = st.sidebar.selectbox(
+        label="Choose coin type",
+        options=list(coin_options.keys()),
+        help="Select the cryptocurrency for tracking."
     )
+
+    coin = coin_options[selected_coin]
+
 else:
     coin_input = st.sidebar.text_input(
         label="Enter custom CoinGecko ID",
@@ -64,15 +80,29 @@ else:
 
 
 # 2. Currency Input (Dynamic based on toggle)
-currency_options = ["usd", "eur", "gbp"]
+currency_options = {
+    "USD (US Dollar)": "usd",
+    "EUR (Euro)": "eur",
+    "GBP (British Pound)": "gbp",
+    "JPY (Japanese Yen)": "jpy",
+    "CAD (Canadian Dollar)": "cad",
+    "AUD (Australian Dollar)": "aud",
+    "CHF (Swiss Franc)": "chf",
+    "CNY (Chinese Yuan)": "cny",
+    "INR (Indian Rupee)": "inr",
+    "AED (UAE Dirham)": "aed"
+}
 
 if not advanced_mode:
-    currency = st.sidebar.selectbox(
-        label="Select currency", 
-        options=currency_options,
+
+    selected_currency = st.sidebar.selectbox(
+        label="Select currency",
+        options=list(currency_options.keys()),
         index=0,
         help="Select the fiat currency for price conversion."
     )
+
+    currency = currency_options[selected_currency]
 else:
     currency_input = st.sidebar.text_input(
         label="Enter custom currency code",
