@@ -151,13 +151,94 @@ if not submit_btn:
 # Visual separator for the main dashboard body
 st.markdown("---")
 
-# ==========================================    
-# Handover Contract Variables for Member 4
-# ==========================================
-# All user inputs have been strictly sanitized, validated, and frozen upon the click of the "Fetch Data" button. You can safely consume the following variables:
-# 
-# - coin (str): Cleaned, lowercase CoinGecko identifier (e.g., "bitcoin", "ethereum"). Ready to be passed directly to api.py functions.
-# - currency (str): Cleaned, lowercase ISO fiat currency code (e.g., "usd", "eur").
-# - days (int): Validated historical timeframe integer (constrained by UI range: 1 to 365).
-#
-# Note: Empty inputs, invalid types, and premature API calls have already been intercepted here via st.stop() and guarded with defensive checks.
+# Fetch crypto data
+try:
+    price_data = get_coin_price(coin, currency)
+    history = get_price_history(coin, days, currency)
+
+except (ValueError, APIError) as exc:
+    st.error(f"Unable to fetch data: {exc}")
+    st.stop()
+
+# Market overview
+st.subheader(f"{coin.title()} Market Overview")
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.metric(
+        "Current Price",
+        f"{price_data['price']:,.2f} {currency.upper()}"
+    )
+
+with col2:
+    change = price_data["change_24h"]
+    if change is None:
+        st.metric("24h Change", "N/A")
+    else:
+        st.metric(
+            "24h Change",
+            f"{change:+.2f}%"
+        )
+
+with col3:
+    market_cap = price_data["market_cap"]
+    if market_cap is None:
+        st.metric("Market Cap", "N/A")
+    else:
+        st.metric(
+            "Market Cap",
+            f"{market_cap:,.0f} {currency.upper()}"
+        )
+
+# Historical price chart
+st.subheader(f"Price History - Last {days} Days")
+
+history_df = pd.DataFrame(
+    history["prices"],
+    columns=["timestamp", "price"]
+)
+
+history_df["date"] = pd.to_datetime(
+    history_df["timestamp"],
+    unit="ms"
+)
+
+history_df = history_df.set_index("date")
+st.line_chart(history_df["price"])
+
+# Statistics table
+st.subheader("Price Statistics")
+
+stats_df = pd.DataFrame({
+    "Metric": [
+        "Current Price",
+        "24h Change",
+        "Market Cap"
+    ],
+    "Value": [
+        f"{price_data['price']:,.2f} {currency.upper()}",
+        (
+            "N/A"
+            if price_data["change_24h"] is None
+            else f"{price_data['change_24h']:+.2f}%"
+        ),
+        (
+            "N/A"
+            if price_data["market_cap"] is None
+            else f"{price_data['market_cap']:,.0f} {currency.upper()}"
+        )
+    ]
+})
+
+st.dataframe(
+    stats_df,
+    hide_index=True,
+    use_container_width=True
+)
+
+# Price alert
+if check_alert(price_data, threshold=5.0):
+    st.warning(
+        f"⚠️ {coin.title()} moved more than 5% "
+        "in the last 24 hours!"
+    )
