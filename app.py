@@ -182,14 +182,24 @@ with col2:
 
 with col3:
     market_cap = price_data["market_cap"]
-    if market_cap is None:
-        st.metric("Market Cap", "N/A")
-    else:
-        st.metric(
-            "Market Cap",
-            f"{market_cap:,.0f} {currency.upper()}"
-        )
 
+    if market_cap is None:
+        market_cap_display = "N/A"
+
+    elif market_cap >= 1_000_000_000_000:
+        market_cap_display = f"{market_cap / 1_000_000_000_000:.2f}T"
+
+    elif market_cap >= 1_000_000_000:
+        market_cap_display = f"{market_cap / 1_000_000_000:.2f}B"
+
+    else:
+        market_cap_display = f"{market_cap / 1_000_000:.2f}M"
+
+    st.metric(
+        "Market Cap",
+        f"{market_cap_display} {currency.upper()}"
+    )
+    
 # Historical price chart
 st.subheader(f"Price History - Last {days} Days")
 
