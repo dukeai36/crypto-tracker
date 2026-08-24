@@ -1,238 +1,183 @@
-# crypto-tracker
-A Streamlit crypto price tracker using the CoinGecko API
+# Crypto Price Tracker
 
-# 📈 Crypto Price Tracker
+    Crypto Price Tracker tracks cryptocurrency market data with the CoinGecko API. You can choose a cryptocurrency, fiat currency, and historical timeframe to see the current price, 24-hour price change, market capitalization, and recent price history.
 
-An interactive cryptocurrency price tracker built with **Python, Streamlit, and the CoinGecko API**.
+    Our team for this Python Bootcamp Project used CoinGecko because the endpoints we needed work without requiring an API key. Streamlit gave us a simple way to turn the same API functions into an interactive web app.
 
-Users can select a cryptocurrency, choose a fiat currency, and explore current prices, 24-hour price changes, market capitalization, and historical price trends. The project also includes a standalone command-line interface and API test script.
+## Live App
 
-## 🌐 Live App
+    This project is deployed on Streamlit Community Cloud at this address: **TODO: Add live Streamlit app URL here 
 
-**[Launch the Crypto Price Tracker](PASTE-LIVE-APP-URL-HERE)**
+    **TODO: Add a screenshot to `assets/crypto-tracker-demo.png`**
 
 ## Features
 
-* Track popular cryptocurrencies including Bitcoin, Ethereum, Solana, Dogecoin, and more
-* View prices in multiple fiat currencies
-* Display current price, 24-hour percentage change, and market capitalization
-* Explore historical price trends with an interactive chart
-* Select custom historical timeframes
-* Use Advanced Input Mode to enter custom CoinGecko IDs and currencies
-* Display an alert when a cryptocurrency moves more than 5% in 24 hours
-* Run the tracker through either Streamlit or the command line
-* Handle invalid coins, API errors, timeouts, and CoinGecko rate limits
+    The standard Streamlit interface allows users to select from 20 popular cryptocurrencies and view the current value of the coin and the last 30 days of historical pricing data across 10 different fiat currencies.
 
-## Project Structure
+    Once the user inputs their preferences the app shows the current price of the selected cryptocurrency, it's 24-hour percentage change, and a historical price chart. (A warning appears when the coin moves more than 5% in either direction over 24 hours.)
 
-```text
-crypto-tracker/
-├── api.py
-├── app.py
-├── cli_demo.py
-├── test_api.py
-├── requirements.txt
-├── README.md
-└── .gitignore
-```
+    There's also an Advanced Input Mode for custom CoinGecko coin IDs, currency codes, and historical periods from 1 to 365 days.
 
-### File Overview
+    The project can be run three ways: through Streamlit, through the interactive CLI, or directly through `api.py`.
 
-* `api.py` — CoinGecko API layer containing price, historical data, and alert functions. It can also run independently from the command line.
-* `app.py` — Streamlit web application containing the user interface, chart, market statistics, and alert display.
-* `cli_demo.py` — Interactive command-line version of the crypto tracker.
-* `test_api.py` — End-to-end smoke tests for the core API functions.
-* `requirements.txt` — Python package dependencies.
+    Bad coin IDs and other invalid inputs show an error instead of crashing. The API also handles network errors, request timeouts, CoinGecko rate limits, and invalid API responses.
 
 ## Getting Started
 
 ### Prerequisites
 
-* Python 3.10.0
-* Git
-* Internet connection
+    * Python 3.10.0
+    * Git
 
-The CoinGecko endpoints used by this project **do not require an API key**.
+    The CoinGecko endpoints used here work without an API key. The API layer also supports an optional CoinGecko demo key through the `COINGECKO_API_KEY` environment variable.
 
-### Clone the Repository
+### Clone and Set Up
 
-```bash
-git clone git@github.com:dukeai36/crypto-tracker.git
-cd crypto-tracker
-```
-
-### Create a Virtual Environment
-
-macOS/Linux:
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-### Install Dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-The project uses:
-
-```text
-streamlit
-pandas
-requests
+    ```bash
+    git clone git@github.com:dukeai36/crypto-tracker.git
+    cd crypto-tracker
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip install -r requirements.txt
 ```
 
 ## Run the Streamlit App
 
-Start the local web application with:
+    ```bash
+    streamlit run app.py
+    ```
 
-```bash
-streamlit run app.py
+    Choose a coin, currency, and number of historical days, then click `Fetch Data`. The dashboard updates with the latest market data, chart, and statistics.
+
+### Advanced Input Mode
+
+    Advanced Input Mode lets you enter your own CoinGecko ID, currency code, and timeframe.
+
+    For example:
+
+        ```text
+        CoinGecko ID: dogecoin
+        Currency: eur
+        Historical days: 14
 ```
 
-Streamlit will provide a local URL, typically:
+## How To Run the Interactive CLI
 
-```text
-http://localhost:8501
-```
+    ```bash
+    python cli_demo.py
+    ```
 
-Open that address in your browser.
+    The CLI asks the user to manually input hte name of cryptocurrency, fiat currency, and  number of historical days of finacial data.
 
-### Example Usage
+    Example:
 
-1. Select **Bitcoin (BTC)**.
-2. Select **USD (US Dollar)**.
-3. Choose **7 days** of historical data.
-4. Click **Fetch Data**.
-5. Review the current price, 24-hour change, market capitalization, price-history chart, and statistics table.
+    ```text
+    Input the Crypto Coin You want The Price for: bitcoin: *User input*
+    Enter the currency you'd like to see bitcoin in: (usd, eur, or gbp) usd: *user input*
+    How many past days do you want to check the price history for bitcoin? *user input*
+    ```
 
-Enable **Advanced Input Mode** to manually enter other valid CoinGecko coin IDs, currencies, and longer historical periods.
+    It then prints the coin ID, currency, current price, 24-hour price change, market capitalization, price alert status, historical starting and ending prices, and percentage change over the selected period.
 
-## Command-Line Interface
-
-The project also includes an interactive CLI:
-
-```bash
-python cli_demo.py
-```
-
-The CLI will prompt you for:
-
-```text
-Input the Crypto Coin You want The Price for: bitcoin
-Enter the currency you'd like to see bitcoin in: (usd, eur, or gbp) usd
-How many past days do you want to check the price history for bitcoin? 7
-```
-
-It then displays the current price, 24-hour price movement, market capitalization, alert status, and historical price change.
-
-Enter `exit` when prompted for the coin or currency to leave the program.
+    Enter `exit` at the coin or currency prompt to close the CLI.
 
 ## Run the API Module Directly
 
-`api.py` can also be executed independently:
+    ```bash
+    python api.py --coin bitcoin --currency usd --days 7
+    ```
 
-```bash
-python api.py --coin bitcoin --currency usd --days 7
+    Another example:
+
+    ```bash
+    python api.py --coin ethereum --currency eur --days 30
+    ```
+
+    Available arguments:
+
+    ```text
+    --coin        CoinGecko cryptocurrency ID
+    --currency    Fiat currency code
+    --days        Number of historical days
+    --threshold   24-hour percentage-change alert threshold
 ```
 
-Example with another asset:
+## Project Case Testing History
 
-```bash
-python api.py --coin ethereum --currency eur --days 30
-```
+    Run the smoke tests with:
 
-Optional arguments include:
+    ```bash
+    python test_api.py
+    ```
 
-```text
---coin        CoinGecko coin ID
---currency    Fiat currency such as usd, eur, or gbp
---days        Number of days of historical data
---threshold   24-hour percentage-change alert threshold
-```
+    The script checks five basic cases:
 
-## Testing
+    1. Bitcoin price retrieval in USD
+    2. Ethereum price retrieval in EUR
+    3. Seven-day Bitcoin price history
+    4. Price-alert logic when a 6% move exceeds a 5% threshold
+    5. Error handling for an invalid cryptocurrency ID
 
-Run the API smoke tests with:
+    Our final run returned:
 
-```bash
-python test_api.py
-```
+    ```text
+    API: 5/5 PASS
+    ```
 
-The test script checks:
-
-* Bitcoin price retrieval
-* Ethereum price retrieval in EUR
-* Bitcoin historical price data
-* Price-alert logic
-* Error handling for an invalid coin
-
-You can also verify that all project files compile correctly with:
-
-```bash
-python -m py_compile api.py app.py cli_demo.py test_api.py
-```
+    These are smoke tests, not a full test suite.
 
 ## Core API Functions
 
-### `get_coin_price(coin_id, vs_currency="usd")`
+    ### `get_coin_price(coin_id, vs_currency="USD")`
 
-Retrieves the current price, 24-hour percentage change, and market capitalization for a cryptocurrency.
+    Gets the current price, 24-hour percentage change, and market capitalization.
 
-### `get_price_history(coin_id, days=7, vs_currency="usd")`
+    ### `get_price_history(coin_id, days=7, vs_currency="usd")`
 
-Retrieves historical price data for the requested cryptocurrency and timeframe.
+    Gets historical cryptocurrency price points for the selected timeframe.
 
-### `check_alert(price_data, threshold=5.0)`
+    ### `check_alert(price_data, threshold=5.0)`
 
-Returns `True` when the absolute 24-hour percentage change exceeds the selected threshold.
+    Returns `True` when the absolute 24-hour percentage change is greater than the selected threshold.
+
+## Project Structure
+
+    ```text
+    crypto-tracker/
+    ├── api.py: CoinGecko API functions and the standalone command-line API interface
+    ├── app.py: : Streamlit web app
+    ├── cli_demo.py: : interactive terminal version
+    ├── test_api.py
+    ├── requirements.txt
+    ├── README.md
+    ├── .gitignore
+    ├── LICENSE
+    └── assets/
+        └── crypto-tracker-demo.png
+    ```
+
+## Notes and Known Limitations
+
+    CoinGecko's free tier can rate-limit repeated requests. If that happens, the API waits briefly and retries once before returning an error.
+
+    The standard Streamlit interface is intentionally limited to 20 coins and 1 to 30 days of history. Advanced Input Mode supports custom CoinGecko IDs and up to 365 days.
+
 
 ## Demo
 
-A short demonstration of the project shows:
-
-1. The standalone API/CLI
-2. The local Streamlit application
-3. The live deployed application
-
-<!-- After adding your demo file, uncomment one of these:
-
-![Crypto Price Tracker Demo](assets/demo.gif)
-
-or add a link to your demo video here.
-
--->
-
-## Technologies Used
-
-* Python 3.10.0
-* Streamlit
-* CoinGecko API
-* Requests
-* Pandas
-* Git
-* GitHub
-
-## Error Handling
-
-The API layer includes handling for:
-
-* Unknown cryptocurrency IDs
-* Invalid currencies
-* Invalid historical-day values
-* Network failures
-* Request timeouts
-* CoinGecko rate limiting
-* Invalid API responses
-
-CoinGecko rate-limit responses are retried once before an error is returned to the user.
+    Our final project demo shows the CLI, the Streamlit app running locally, and the live Streamlit Community Cloud deployment.
 
 ## Contributors
 
-This project was developed collaboratively as a six-person team project. Development was divided across the API layer, CLI interface, Streamlit inputs, Streamlit outputs and visualization, deployment, and documentation/QA.
+    This project was built by a six-person team using individual Git branches, commits, and pull requests:
+        Praful Chunchu
+        John Fillingim
+        Cheney Li
+        Lexie Lin
+        Murwan Owais
+        Samuel Teshome
+
 
 ## License
 
-This project was developed for an academic team assignment.
+    This project is licensed under the MIT License. See `LICENSE` for details. (**TODO: Confirm we need to make this file**)
